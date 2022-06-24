@@ -1,10 +1,11 @@
 <script context="module" lang="ts">
+	import { config } from '$lib/_config';
 	/**
 	 * @type {import('@sveltejs/kit').Load}
 	 */
 	export async function load({ fetch }) {
 		// get devices already on server for server side rendering
-		const res = await fetch('http://127.0.0.1:8080/devices');
+		const res = await fetch(config.sse_addr + '/devices');
 		const data = await res.json();
 		const attributes: { [key: string]: any } = {};
 		for (const ieeeAddr in data) {
@@ -32,6 +33,7 @@
 	import DeviceCard from './_DeviceCard.svelte';
 	import EditCard from './_EditCard.svelte';
 	import { streamable } from 'svelte-streamable';
+	// import { config } from '$lib/_config';
 
 	import { onMount } from 'svelte';
 
@@ -94,7 +96,7 @@
 	onMount(async () => {
 		// get devices initially per sse, in case they changed after the server side rendering
 		streamable({
-			url: 'http://127.0.0.1:8080/sse',
+			url: config.sse_addr + '/sse',
 			event: 'init'
 		}).subscribe(async (value) => {
 			let sseDevices: { [key: string]: any } = (await value) as {};
@@ -110,7 +112,7 @@
 
 		//get changed or new devices per sse
 		const updatesAsync = streamable({
-			url: 'http://127.0.0.1:8080/sse',
+			url: config.sse_addr + '/sse',
 			event: 'message'
 		}).subscribe(async (value) => {
 			console.log('updates');
