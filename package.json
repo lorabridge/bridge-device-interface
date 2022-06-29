@@ -1,5 +1,5 @@
 {
-	"name": "bridge-device-interface-flowbite",
+	"name": "bridge-device-interface",
 	"version": "0.0.1",
 	"scripts": {
 		"dev": "svelte-kit dev",
