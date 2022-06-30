@@ -22,7 +22,7 @@
 			alt="Lorabridge Logo"
 		/>
 		<span class="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
-			Bride-Devices
+			Bridge-Devices
 		</span>
 	</NavBrand>
 	<!-- <NavHamburger on:click={toggle} />
