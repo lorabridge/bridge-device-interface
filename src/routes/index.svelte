@@ -5,9 +5,9 @@
 	/**
 	 * @type {import('@sveltejs/kit').Load}
 	 */
-	export async function load({ fetch }) {
+	export async function load({ url, fetch }) {
 		// get devices already on server for server side rendering
-		const res = await fetch(config.sse_addr + '/devices');
+		const res = await fetch((config.sse_addr || 'http://' + url.hostname + ':8080') + '/devices');
 		const data = await res.json();
 		const attributes: { [key: string]: any } = {};
 		for (const ieeeAddr in data) {
