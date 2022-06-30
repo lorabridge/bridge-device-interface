@@ -100,7 +100,7 @@
 	onMount(async () => {
 		// get devices initially per sse, in case they changed after the server side rendering
 		streamable({
-			url: config.sse_addr + '/sse',
+			url: (config.sse_addr || 'http://' + window.location.host + ':8080') + '/sse',
 			event: 'init'
 		}).subscribe(async (value) => {
 			let sseDevices: { [key: string]: any } = (await value) as {};
