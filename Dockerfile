@@ -10,8 +10,8 @@ RUN npm audit fix
 COPY . .
 
 ENV NODE_ENV=production
-ARG VITE_SSE_ADDR=http://sse:8080
-ARG VITE_REDIS_CONN_STRING=redis://redis:6379
+ENV VITE_SSE_ADDR=http://sse:8080
+ENV VITE_REDIS_CONN_STRING=redis://redis:6379
 # ARG VITE_CMS_SSL=false
 # ENV VITE_CMS_HOST=${VITE_CMS_HOST}
 RUN npm run build
