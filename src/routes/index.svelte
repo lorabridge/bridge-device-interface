@@ -99,8 +99,9 @@
 
 	onMount(async () => {
 		// get devices initially per sse, in case they changed after the server side rendering
+		console.log('http://' + window.location.hostname + ':8080');
 		streamable({
-			url: (config.sse_addr || 'http://' + window.location.host + ':8080') + '/sse',
+			url: (config.sse_addr || 'http://' + window.location.hostname + ':8080') + '/sse',
 			event: 'init'
 		}).subscribe(async (value) => {
 			let sseDevices: { [key: string]: any } = (await value) as {};
@@ -116,7 +117,7 @@
 
 		//get changed or new devices per sse
 		const updatesAsync = streamable({
-			url: config.sse_addr + '/sse',
+			url: (config.sse_addr || 'http://' + window.location.hostname + ':8080') + '/sse',
 			event: 'message'
 		}).subscribe(async (value) => {
 			console.log('updates');
