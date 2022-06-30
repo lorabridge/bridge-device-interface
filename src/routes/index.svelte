@@ -194,7 +194,7 @@
 	}
 </script>
 
-<div class="grid grid-cols-4 place-items-center gap-8">
+<div class="grid grid-cols-1 place-items-center gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
 	{#each Object.entries(devices) as elem}
 		<svelte:component this={elem[1]['component']} device={elem[1]['device']} />
 	{/each}
