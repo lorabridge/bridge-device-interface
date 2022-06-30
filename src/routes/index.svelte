@@ -1,4 +1,6 @@
 <script context="module" lang="ts">
+	const STATIC_ATTRIBUTES = ['linkquality'];
+
 	import { config } from '$lib/_config';
 	/**
 	 * @type {import('@sveltejs/kit').Load}
@@ -9,6 +11,7 @@
 		const data = await res.json();
 		const attributes: { [key: string]: any } = {};
 		for (const ieeeAddr in data) {
+			data[ieeeAddr]['attributes'] = [...data[ieeeAddr]['attributes'], ...STATIC_ATTRIBUTES];
 			const res_atts = await fetch('/device_attributes/' + ieeeAddr);
 			const atts = await res_atts.json();
 			if (atts.length > 0) {
@@ -76,6 +79,7 @@
 	}
 
 	function updateDevice(ieeeAddr, newDevice) {
+		newDevice['attributes'] = [...newDevice['attributes'], ...STATIC_ATTRIBUTES];
 		devices[ieeeAddr]['device'] = {
 			...devices[ieeeAddr]['device'],
 			...newDevice,
