@@ -7,7 +7,7 @@
 	 */
 	export async function load({ url, fetch }) {
 		// get devices already on server for server side rendering
-		const res = await fetch((config.sse_addr || 'http://' + url.hostname + ':8080') + '/devices');
+		const res = await fetch((config.sse_addr || 'http://' + url.hostname + ':' + config.sse_port) + '/devices');
 		const data = await res.json();
 		const attributes: { [key: string]: any } = {};
 		for (const ieeeAddr in data) {
@@ -99,9 +99,9 @@
 
 	onMount(async () => {
 		// get devices initially per sse, in case they changed after the server side rendering
-		console.log('http://' + window.location.hostname + ':8080');
+		console.log('http://' + window.location.hostname + ':' + config.sse_port);
 		streamable({
-			url: (config.sse_addr || 'http://' + window.location.hostname + ':8080') + '/sse',
+			url: (config.sse_addr || 'http://' + window.location.hostname + ':' + config.sse_port) + '/sse',
 			event: 'init'
 		}).subscribe(async (value) => {
 			let sseDevices: { [key: string]: any } = (await value) as {};
@@ -117,7 +117,7 @@
 
 		//get changed or new devices per sse
 		const updatesAsync = streamable({
-			url: (config.sse_addr || 'http://' + window.location.hostname + ':8080') + '/sse',
+			url: (config.sse_addr || 'http://' + window.location.hostname + ':' + config.sse_port) + '/sse',
 			event: 'message'
 		}).subscribe(async (value) => {
 			console.log('updates');

@@ -4,6 +4,7 @@ export const vars = {
     // cms_ssl: import.meta.env.VITE_CMS_SSL == "true" ? true : false,
     sse_addr: import.meta.env.VITE_SSE_ADDR,
     redis_conn_string: import.meta.env.VITE_REDIS_CONN_STRING || "redis://127.0.0.1:6379",
+    sse_port: "8080",
 };
 // vars['cms_url'] = `${vars.cms_ssl ? "https" : "http"}://${vars.cms_host}:${vars.cms_port}`;
 export const config = vars;

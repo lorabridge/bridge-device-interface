@@ -10,7 +10,7 @@ RUN npm audit fix
 COPY . .
 
 ENV NODE_ENV=production
-ARG VITE_SSE_ADDR
+#ARG VITE_SSE_ADDR
 ENV VITE_REDIS_CONN_STRING=redis://redis:6379
 # ARG VITE_CMS_SSL=false
 # ENV VITE_CMS_HOST=${VITE_CMS_HOST}
@@ -29,4 +29,5 @@ RUN npm audit fix
 
 USER 1337:1337
 ENV NODE_ENV=production
+ENV VITE_SSE_ADDR=http://sse:8080
 ENTRYPOINT [ "node", "/usr/src/app/index.js" ]
