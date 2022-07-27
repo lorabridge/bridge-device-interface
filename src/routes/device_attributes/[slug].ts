@@ -8,7 +8,7 @@ client.on('error', (err) => console.log('Redis Client Error', err));
 
 await client.connect();
 
-export async function get({ params }) {
+export async function GET({ params }) {
     const { slug } = params;
     const value = await client.lRange(PREFIX + slug, 0, -1);
 
@@ -23,7 +23,7 @@ export async function get({ params }) {
     };
 }
 
-export async function post({ params, request }) {
+export async function POST({ params, request }) {
     const { slug } = params;
     const data = await request.json();
 
