@@ -1,10 +1,10 @@
-import * as mqtt from "async-mqtt";
+import { default as mqtt} from "async-mqtt";
 import { config } from '$lib/_config';
 
 const STATETOPIC = 'zigbee2mqtt/bridge/state';
 const DEVICESTOPIC = 'zigbee2mqtt/bridge/devices';
 
-const mClient = await mqtt.connectAsync([{ host: config.mqtt_host, port: config.mqtt_port }])
+const mClient = await mqtt.connectAsync("mqtt://" + config.mqtt_host + ":" + config.mqtt_port);
 let state = "unknown";
 let devCount = 0;
 
