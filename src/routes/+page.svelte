@@ -1,47 +1,35 @@
 <script context="module" lang="ts">
+	// throw new Error("@migration task: Check code was safely removed (https://github.com/sveltejs/kit/discussions/5774#discussioncomment-3292722)");
 	const STATIC_ATTRIBUTES = ['linkquality'];
-
-	import { config } from '$lib/_config';
-	/**
-	 * @type {import('@sveltejs/kit').Load}
-	 */
-	export async function load({ url, fetch }) {
-		// get devices already on server for server side rendering
-		const res = await fetch((config.sse_addr || 'http://' + url.hostname + ':' + config.sse_port) + '/devices');
-		const data = await res.json();
-		const attributes: { [key: string]: any } = {};
-		for (const ieeeAddr in data) {
-			data[ieeeAddr]['attributes'] = [...data[ieeeAddr]['attributes'], ...STATIC_ATTRIBUTES];
-			const res_atts = await fetch('/device_attributes/' + ieeeAddr);
-			const atts = await res_atts.json();
-			if (atts.length > 0) {
-				attributes[ieeeAddr] = atts;
-			}
-		}
-
-		return {
-			props: {
-				device_data: data,
-				device_attributes: attributes
-			}
-		};
-	}
 </script>
 
 <script lang="ts">
-	import { Card, Table, TableDefaultRow, Button, InteractiveTabHead } from 'flowbite-svelte';
+	// throw new Error("@migration task: Add data prop (https://github.com/sveltejs/kit/discussions/5774#discussioncomment-3292707)");
+	import { config } from '$lib/_config';
+	import { Card, Table, Button } from 'flowbite-svelte';
 	import { SvelteComponent } from 'svelte';
-	import { Adjustments } from 'svelte-heros';
 	import { SvelteElement } from 'svelte/internal';
 	import DeviceCard from './_DeviceCard.svelte';
 	import EditCard from './_EditCard.svelte';
+	import Stats from './_Stats.svelte';
 	import { streamable } from 'svelte-streamable';
+	import { isDict } from '$lib/_utils';
 	// import { config } from '$lib/_config';
+	import { Tabs, TabItem } from 'flowbite-svelte';
 
+	let activeTabValue = 1;
+	const handleClick = (tabValue) => () => {
+		activeTabValue = tabValue;
+	};
 	import { onMount } from 'svelte';
 
-	export let device_data;
-	export let device_attributes;
+	/** @type {import('./$types').PageData */
+	export let data;
+	let { device_data, device_attributes, stats } = data;
+	$: ({ device_data, device_attributes, stats } = data); // so it stays in sync when `data` changes
+
+	// export let device_data;
+	// export let device_attributes;
 	$: console.log(device_attributes);
 
 	let devices: { [key: string]: { [key: string]: any } } = {};
@@ -101,7 +89,8 @@
 		// get devices initially per sse, in case they changed after the server side rendering
 		console.log('http://' + window.location.hostname + ':' + config.sse_port);
 		streamable({
-			url: (config.sse_addr || 'http://' + window.location.hostname + ':' + config.sse_port) + '/sse',
+			url:
+				(config.sse_addr || 'http://' + window.location.hostname + ':' + config.sse_port) + '/sse',
 			event: 'init'
 		}).subscribe(async (value) => {
 			let sseDevices: { [key: string]: any } = (await value) as {};
@@ -117,7 +106,8 @@
 
 		//get changed or new devices per sse
 		const updatesAsync = streamable({
-			url: (config.sse_addr || 'http://' + window.location.hostname + ':' + config.sse_port) + '/sse',
+			url:
+				(config.sse_addr || 'http://' + window.location.hostname + ':' + config.sse_port) + '/sse',
 			event: 'message'
 		}).subscribe(async (value) => {
 			console.log('updates');
@@ -126,6 +116,39 @@
 				updateDevice(sseDevice['ieeeAddr'], sseDevice);
 			} else {
 				devices[sseDevice['ieeeAddr']] = prepareDevice(sseDevice);
+			}
+		});
+
+		streamable({
+			url:
+				(config.sse_addr || 'http://' + window.location.hostname + ':' + config.sse_port) +
+				'/sse/stats',
+			event: 'init'
+		}).subscribe(async (value) => {
+			console.log('stats init');
+			let sseStats: { [key: string]: any } = (await value) as {};
+			for (const key in sseStats) {
+				if (isDict(sseStats[key])) {
+					stats[key] = { ...stats[key], ...sseStats[key] };
+				} else {
+					stats[key] = sseStats[key];
+				}
+			}
+		});
+		streamable({
+			url:
+				(config.sse_addr || 'http://' + window.location.hostname + ':' + config.sse_port) +
+				'/sse/stats',
+			event: 'message'
+		}).subscribe(async (value) => {
+			console.log('stats update');
+			let sseStats: { [key: string]: any } = (await value) as {};
+			for (const key in sseStats) {
+				if (isDict(sseStats[key])) {
+					stats[key] = { ...stats[key], ...sseStats[key] };
+				} else {
+					stats[key] = sseStats[key];
+				}
 			}
 		});
 	});
@@ -195,8 +218,17 @@
 	}
 </script>
 
-<div class="grid grid-cols-1 place-items-center gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-	{#each Object.entries(devices) as elem}
-		<svelte:component this={elem[1]['component']} device={elem[1]['device']} />
-	{/each}
-</div>
+<Tabs class="pl-4 mb-4 pr-12" style="underline">
+	<TabItem open title="Devices">
+		<div
+			class="grid grid-cols-1 place-items-center gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+		>
+			{#each Object.entries(devices) as elem}
+				<svelte:component this={elem[1]['component']} device={elem[1]['device']} />
+			{/each}
+		</div>
+	</TabItem>
+	<TabItem title="Configuration">
+		<Stats {stats} />
+	</TabItem>
+</Tabs>

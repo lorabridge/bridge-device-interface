@@ -13,7 +13,8 @@ const config = {
 	],
 
 	kit: {
-		adapter: node()
+		adapter: node(),
+		prerender: { enabled: false }
 	}
 };
 

@@ -19,19 +19,22 @@
 	// export let editFunc = (ieeeAddr: string) => {};
 </script>
 
-<Card header={devName}>
-	<p class="mb-3 font-normal text-gray-700 dark:text-gray-400" slot="paragraph">
+<Card>
+	<h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+		{devName}
+	</h5>
+	<p class="font-normal text-gray-700 dark:text-gray-400">
 		<Table header={[]} divClass="relative overflow-x-auto sm:rounded-lg border-2 border-dashed">
 			<!-- <TableDefaultRow items={itemEx} html /> -->
-			<tr class="odd:bg-white even:bg-gray-50 odd:dark:bg-gray-800 even:dark:bg-gray-700">
+			<tr class="odd:bg-white even:bg-gray-100 odd:dark:bg-gray-800 even:dark:bg-gray-700">
 				<th scope="col" class="px-6 py-3">ieeeAddr</th>
 				<td class="pr-4">{ieeeAddr}</td>
 			</tr>
-			<tr class="odd:bg-white even:bg-gray-50 odd:dark:bg-gray-800 even:dark:bg-gray-700">
+			<tr class="odd:bg-white even:bg-gray-100 odd:dark:bg-gray-800 even:dark:bg-gray-700">
 				<th scope="col" class="px-6 py-3">manufName</th>
 				<td class="pr-4">{manufName}</td>
 			</tr>
-			<tr class="odd:bg-white even:bg-gray-50 odd:dark:bg-gray-800 even:dark:bg-gray-700">
+			<tr class="odd:bg-white even:bg-gray-100 odd:dark:bg-gray-800 even:dark:bg-gray-700">
 				<th scope="col" class="px-6 py-3">Attributes</th>
 				<td class="pr-4">
 					<ul class="text-sm font-medium">
@@ -42,10 +45,10 @@
 				>
 			</tr>
 		</Table>
-		<span class="float-right space-x-2 my-2">
+		<span class="float-right space-x-2 mt-2">
 			<Button
 				name="Button"
-				btnColor="light"
+				color="light"
 				textSize="text-xs"
 				on:click={() => {
 					editFunc(ieeeAddr);
