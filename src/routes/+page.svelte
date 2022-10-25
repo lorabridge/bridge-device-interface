@@ -1,26 +1,17 @@
 <script context="module" lang="ts">
-	// throw new Error("@migration task: Check code was safely removed (https://github.com/sveltejs/kit/discussions/5774#discussioncomment-3292722)");
+	// https://github.com/sveltejs/kit/discussions/5774#discussioncomment-3292722
 	const STATIC_ATTRIBUTES = ['linkquality'];
 </script>
 
 <script lang="ts">
-	// throw new Error("@migration task: Add data prop (https://github.com/sveltejs/kit/discussions/5774#discussioncomment-3292707)");
+	// https://github.com/sveltejs/kit/discussions/5774#discussioncomment-3292707
 	import { config } from '$lib/_config';
-	import { Card, Table, Button } from 'flowbite-svelte';
-	import { SvelteComponent } from 'svelte';
-	import { SvelteElement } from 'svelte/internal';
 	import DeviceCard from './_DeviceCard.svelte';
 	import EditCard from './_EditCard.svelte';
 	import Stats from './_Stats.svelte';
 	import { streamable } from 'svelte-streamable';
 	import { isDict } from '$lib/_utils';
-	// import { config } from '$lib/_config';
 	import { Tabs, TabItem } from 'flowbite-svelte';
-
-	let activeTabValue = 1;
-	const handleClick = (tabValue) => () => {
-		activeTabValue = tabValue;
-	};
 	import { onMount } from 'svelte';
 
 	/** @type {import('./$types').PageData */
@@ -28,17 +19,12 @@
 	let { device_data, device_attributes, stats } = data;
 	$: ({ device_data, device_attributes, stats } = data); // so it stays in sync when `data` changes
 
-	// export let device_data;
-	// export let device_attributes;
 	$: console.log(device_attributes);
 
 	let devices: { [key: string]: { [key: string]: any } } = {};
-	// console.log(device_data);
 	$: {
-		// console.log(device_data);
 		let tmp: { [key: string]: {} } = {};
 		for (const ieeeAddr in device_data) {
-			// console.log(device_data[ieeeAddr]['attributes']);
 			tmp[ieeeAddr] = prepareDevice(device_data[ieeeAddr]);
 		}
 		devices = tmp;
@@ -105,7 +91,7 @@
 		});
 
 		//get changed or new devices per sse
-		const updatesAsync = streamable({
+		streamable({
 			url:
 				(config.sse_addr || 'http://' + window.location.hostname + ':' + config.sse_port) + '/sse',
 			event: 'message'
@@ -119,6 +105,7 @@
 			}
 		});
 
+		// get stats initially per sse, in case they changed after the server side rendering
 		streamable({
 			url:
 				(config.sse_addr || 'http://' + window.location.hostname + ':' + config.sse_port) +
@@ -135,6 +122,8 @@
 				}
 			}
 		});
+
+		//get changed or new stats per sse
 		streamable({
 			url:
 				(config.sse_addr || 'http://' + window.location.hostname + ':' + config.sse_port) +

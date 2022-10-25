@@ -32,7 +32,6 @@
 				<th scope="col" class="px-6 py-3">Device EUI:</th>
 				<td class="pr-6 text-right">{stats.deveui}</td>
 			</tr>
-			<!-- <TableDefaultRow items={itemEx} html /> -->
 			{#each Object.entries(stats.interfaces) as elem}
 				<tr class="odd:bg-white even:bg-gray-50 odd:dark:bg-gray-800 even:dark:bg-gray-700">
 					<th scope="col" class="px-6 py-3">{elem[0]}:</th>

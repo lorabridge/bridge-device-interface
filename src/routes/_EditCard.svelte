@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Card, Table, Button, Toggle, ButtonGroup } from 'flowbite-svelte';
-	import { Adjustments, Check, X } from 'svelte-heros';
+	import { Check, X } from 'svelte-heros';
 	export let device: {
 		devName: string;
 		ieeeAddr: string;
@@ -11,12 +11,6 @@
 		editFunc?: Function;
 	};
 	$: ({ devName, ieeeAddr, manufName, attributes, cancelFunc, saveFunc, editFunc } = device);
-	// export let devName: string;
-	// export let ieeeAddr: string;
-	// export let manufName: string;
-	// export let attributes: { [key: string]: boolean };
-	// export let cancelFunc = (ieeeAddr: string) => {};
-	// export let saveFunc = (ieeeAddr: string) => {};
 
 	let defaultClasses =
 		'inline-flex items-center py-0.5 px-1 text-xs font-medium first:rounded-l-lg border-t border-b last:rounded-r-md border-l last:border-r focus:z-10 focus:ring-2';
@@ -48,8 +42,8 @@
 									value="{ieeeAddr}-{attribute}-toggle"
 									name="{ieeeAddr}-{attribute}-toggle"
 									id="{ieeeAddr}-{attribute}-toggle"
-									bind:checked={device['attributes'][attribute]}
-								>{attribute}</Toggle>
+									bind:checked={device['attributes'][attribute]}>{attribute}</Toggle
+								>
 							</li>
 						{/each}
 					</ul></td
@@ -57,9 +51,6 @@
 			</tr>
 		</Table>
 		<span class="float-right space-x-2 mt-2">
-			<!-- <Button name="Button" btnColor="light" textSize="text-xs">
-				<Adjustments class="text-blue-700 dark:text-red-700" />
-			</Button> -->
 			<ButtonGroup>
 				<Button
 					on:click={() => {

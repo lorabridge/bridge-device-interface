@@ -6,7 +6,6 @@ import { config } from '$lib/_config';
  */
 export async function load({ url, fetch, data }) {
 	// get devices already on server for server side rendering
-
 	const res = await fetch((config.sse_addr || 'http://' + url.hostname + ':' + config.sse_port) + '/devices', { headers: { origin: url.origin } });
 	const dev_data = await res.json();
 	const attributes: { [key: string]: any } = {};
@@ -18,33 +17,9 @@ export async function load({ url, fetch, data }) {
 			attributes[ieeeAddr] = atts;
 		}
 	}
+	// get stats already on server for server side rendering
 	const state_res = await fetch((config.sse_addr || 'http://' + url.hostname + ':' + config.sse_port) + '/stats', { headers: { origin: url.origin } });
 	data = { ...data, ... await state_res.json() };
-	// console.log(data);
-	// try {
-	// 	const res = await fetch('stats/lorawan');
-	// 	if (!res.ok) {
-	// 		throw new Error("Fetch returned not ok");
-	// 	}
-	// 	data['lorawan'] = await res.json();
-	// 	console.log((await fetch('stats/lorawan')).ok);
-	// } catch (error) {
-	// 	data['lorawan'] = { txstatus: "unknown", queueLength: "unknown" };
-	// 	console.log("unable to get lorawan info");
-	// 	console.error(error);
-	// }
-	// try {
-	// 	const res = await fetch('stats/zigbee');
-	// 	if (!res.ok) {
-	// 		throw new Error("Fetch returned not ok");
-	// 	}
-	// 	data['zigbee'] = await res.json();
-	// }
-	// catch (error) {
-	// 	data['zigbee'] = { status: "unknown", devices: "unknown" };
-	// 	console.log("unable to get zigbee info");
-	// 	console.error(error);
-	// }
 
 	return {
 		device_data: dev_data,

@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { Card, Table, Button } from 'flowbite-svelte';
 	import { Adjustments } from 'svelte-heros';
-	import { attr } from 'svelte/internal';
 	export let device: {
 		devName: string;
 		ieeeAddr: string;
@@ -12,11 +11,6 @@
 		editFunc: Function;
 	};
 	$: ({ devName, ieeeAddr, manufName, attributes, cancelFunc, saveFunc, editFunc } = device);
-	// export let devName: string;
-	// export let ieeeAddr: string;
-	// export let manufName: string;
-	// export let attributes: { [key: string]: boolean };
-	// export let editFunc = (ieeeAddr: string) => {};
 </script>
 
 <Card>
@@ -25,7 +19,6 @@
 	</h5>
 	<p class="font-normal text-gray-700 dark:text-gray-400">
 		<Table header={[]} divClass="relative overflow-x-auto sm:rounded-lg border-2 border-dashed">
-			<!-- <TableDefaultRow items={itemEx} html /> -->
 			<tr class="odd:bg-white even:bg-gray-100 odd:dark:bg-gray-800 even:dark:bg-gray-700">
 				<th scope="col" class="px-6 py-3">ieeeAddr</th>
 				<td class="pr-4">{ieeeAddr}</td>
