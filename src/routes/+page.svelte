@@ -133,8 +133,13 @@
 			console.log('stats update');
 			let sseStats: { [key: string]: any } = (await value) as {};
 			for (const key in sseStats) {
-				if (isDict(sseStats[key])) {
-					stats[key] = { ...stats[key], ...sseStats[key] };
+				console.log(sseStats);
+				if (sseStats[key] === null && stats[key] !== undefined) {
+					delete stats[key];
+				} else if (isDict(sseStats[key])) {
+					const obj = { ...stats[key], ...sseStats[key] };
+					Object.keys(obj).forEach((k) => obj[k] == null && delete obj[k]);
+					stats[key] = obj;
 				} else {
 					stats[key] = sseStats[key];
 				}
