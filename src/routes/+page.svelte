@@ -29,6 +29,9 @@
 		}
 		devices = tmp;
 	}
+
+	let updateStream;
+
 	function prepareDevice(dev: { [key: string]: any }) {
 		return {
 			device: {
@@ -123,29 +126,59 @@
 			}
 		});
 
-		//get changed or new stats per sse
-		streamable({
+		updateStream = streamable({
 			url:
 				(config.sse_addr || 'http://' + window.location.hostname + ':' + config.sse_port) +
 				'/sse/stats',
 			event: 'message'
-		}).subscribe(async (value) => {
-			console.log('stats update');
-			let sseStats: { [key: string]: any } = (await value) as {};
-			for (const key in sseStats) {
-				console.log(sseStats);
-				if (sseStats[key] === null && stats[key] !== undefined) {
-					delete stats[key];
-				} else if (isDict(sseStats[key])) {
-					const obj = { ...stats[key], ...sseStats[key] };
-					Object.keys(obj).forEach((k) => obj[k] == null && delete obj[k]);
-					stats[key] = obj;
-				} else {
-					stats[key] = sseStats[key];
-				}
-			}
 		});
+		// //get changed or new stats per sse
+		// streamable({
+		// 	url:
+		// 		(config.sse_addr || 'http://' + window.location.hostname + ':' + config.sse_port) +
+		// 		'/sse/stats',
+		// 	event: 'message'
+		// }).subscribe(async (value) => {
+		// 	console.log('stats update');
+		// 	let sseStats: { [key: string]: any } = (await value) as {};
+		// 	for (const key in sseStats) {
+		// 		console.log(sseStats);
+		// 		if (sseStats[key] === null && stats[key] !== undefined) {
+		// 			delete stats[key];
+		// 		} else if (isDict(sseStats[key])) {
+		// 			const obj = { ...stats[key], ...sseStats[key] };
+		// 			Object.keys(obj).forEach((k) => obj[k] == null && delete obj[k]);
+		// 			stats[key] = obj;
+		// 		} else {
+		// 			stats[key] = sseStats[key];
+		// 		}
+		// 	}
+		// });
 	});
+
+	let statUnsubscribe = undefined;
+
+	function listenStats() {
+		//get changed or new stats per sse
+		if (statUnsubscribe === undefined) {
+			statUnsubscribe = updateStream.subscribe(async (value) => {
+				console.log('stats update');
+				let sseStats: { [key: string]: any } = (await value) as {};
+				for (const key in sseStats) {
+					console.log(sseStats);
+					if (sseStats[key] === null && stats[key] !== undefined) {
+						delete stats[key];
+					} else if (isDict(sseStats[key])) {
+						const obj = { ...stats[key], ...sseStats[key] };
+						Object.keys(obj).forEach((k) => obj[k] == null && delete obj[k]);
+						stats[key] = obj;
+					} else {
+						stats[key] = sseStats[key];
+					}
+				}
+			});
+		}
+	}
 
 	// let devices = [
 	// 	{
@@ -213,7 +246,14 @@
 </script>
 
 <Tabs class="pl-4 mb-4 pr-12" style="underline">
-	<TabItem open title="Devices">
+	<TabItem
+		open
+		title="Devices"
+		on:click={() => {
+			statUnsubscribe();
+			statUnsubscribe = undefined;
+		}}
+	>
 		<div
 			class="grid grid-cols-1 place-items-center gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
 		>
@@ -222,7 +262,7 @@
 			{/each}
 		</div>
 	</TabItem>
-	<TabItem title="Configuration">
+	<TabItem title="Configuration" on:click={listenStats}>
 		<Stats {stats} />
 	</TabItem>
 </Tabs>
