@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { Card, Table, Button } from 'flowbite-svelte';
-	import { Adjustments } from 'svelte-heros';
+	import { Card, Table, Button, ButtonGroup, Modal } from 'flowbite-svelte';
+	import { Adjustments, Trash } from 'svelte-heros';
 	export let device: {
 		devName: string;
 		ieeeAddr: string;
@@ -11,6 +11,18 @@
 		editFunc: Function;
 	};
 	$: ({ devName, ieeeAddr, manufName, attributes, cancelFunc, saveFunc, editFunc } = device);
+
+	let removeModal = false;
+
+	function removeDevice(ieeeAddr: string) {
+		fetch('stats/zigbee/remove', {
+			method: 'POST',
+			body: JSON.stringify({ id: ieeeAddr }),
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		});
+	}
 </script>
 
 <Card>
@@ -39,16 +51,38 @@
 			</tr>
 		</Table>
 		<span class="float-right space-x-2 mt-2">
-			<Button
-				name="Button"
-				color="light"
-				textSize="text-xs"
-				on:click={() => {
-					editFunc(ieeeAddr);
-				}}
-			>
-				<Adjustments class="text-blue-700 dark:text-red-700" />
-			</Button>
+			<ButtonGroup>
+				<Button
+					name="ButtonRemove"
+					color="light"
+					textSize="text-xs"
+					on:click={() => {
+						removeModal = true
+					}}
+					><Trash class="text-blue-700 dark:text-red-700" />
+				</Button>
+				<Button
+					name="Button"
+					color="light"
+					textSize="text-xs"
+					on:click={() => {
+						editFunc(ieeeAddr);
+					}}
+				>
+					<Adjustments class="text-blue-700 dark:text-red-700" />
+				</Button>
+			</ButtonGroup>
 		</span>
 	</p>
 </Card>
+
+<Modal title="Remove Device" bind:open={removeModal} autoclose>
+  <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+   Are you sure you want to remove the device <strong>{devName}</strong>?
+  </p>
+
+  <svelte:fragment slot='footer'>
+    <Button color="red" on:click={() => removeDevice(ieeeAddr)}>Remove</Button>
+    <Button color="alternative">Keep</Button>
+  </svelte:fragment>
+</Modal>
