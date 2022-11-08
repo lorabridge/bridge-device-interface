@@ -74,6 +74,19 @@
 		};
 	}
 
+	function handleDevice(sseDevice) {
+		if (sseDevice['remove'] === true) {
+			console.log('remove');
+			delete devices[sseDevice['ieeeAddr']];
+			devices = { ...devices };
+			console.log(devices);
+		} else if (sseDevice['ieeeAddr'] in devices) {
+			updateDevice(sseDevice['ieeeAddr'], sseDevice);
+		} else {
+			devices[sseDevice['ieeeAddr']] = prepareDevice(sseDevice);
+		}
+	}
+
 	onMount(async () => {
 		// get devices initially per sse, in case they changed after the server side rendering
 		console.log('http://' + window.location.hostname + ':' + config.sse_port);
@@ -84,11 +97,12 @@
 		}).subscribe(async (value) => {
 			let sseDevices: { [key: string]: any } = (await value) as {};
 			for (const ieeeAddr in sseDevices) {
-				if (ieeeAddr in devices) {
-					updateDevice(ieeeAddr, sseDevices[ieeeAddr]);
-				} else {
-					devices[ieeeAddr] = prepareDevice(sseDevices[ieeeAddr]);
-				}
+				handleDevice(sseDevices[ieeeAddr]);
+				// if (ieeeAddr in devices) {
+				// 	updateDevice(ieeeAddr, sseDevices[ieeeAddr]);
+				// } else {
+				// 	devices[ieeeAddr] = prepareDevice(sseDevices[ieeeAddr]);
+				// }
 			}
 			// console.log(sseDevices);
 		});
@@ -101,11 +115,12 @@
 		}).subscribe(async (value) => {
 			console.log('updates');
 			let sseDevice: { [key: string]: any } = (await value) as {};
-			if (sseDevice['ieeeAddr'] in devices) {
-				updateDevice(sseDevice['ieeeAddr'], sseDevice);
-			} else {
-				devices[sseDevice['ieeeAddr']] = prepareDevice(sseDevice);
-			}
+			handleDevice(sseDevice);
+			// if (sseDevice['ieeeAddr'] in devices) {
+			// 	updateDevice(sseDevice['ieeeAddr'], sseDevice);
+			// } else {
+			// 	devices[sseDevice['ieeeAddr']] = prepareDevice(sseDevice);
+			// }
 		});
 
 		// get stats initially per sse, in case they changed after the server side rendering
