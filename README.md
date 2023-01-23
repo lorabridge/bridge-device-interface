@@ -10,7 +10,8 @@ Our web interface is a self-provided SvelteKit web application that shows the Zi
 - `VITE_REDIS_CONN_STRING`: Connetion string for redis (default: `redis://redis:6379`)
 - `VITE_MQTT_HOST`: IP or hostname of the MQTT host
 - `VITE_MQTT_PORT`: Port used by MQTT
- 
+- `VITE_SSE_ADDR`: URL of the SSE server (default: `http://sse:8080`)
+
 ## Local Development
 
 ```bash
