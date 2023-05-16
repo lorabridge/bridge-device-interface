@@ -1,6 +1,6 @@
 # Bridge Device Interface
 
-This repository is part of the LoRaBridge project.
+This repository is part of the [LoRaBridge](https://github.com/lorabridge/lorabridge) project.
 It provides the docker image for web interface used on our bridge device.
 
 Our web interface is a self-provided SvelteKit web application that shows the ZigBee devices, which are retrieved via the SSE server. It enables you to disable unnecessary sensor attributes, in order to further reduce the transmitted data.
