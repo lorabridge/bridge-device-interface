@@ -6,6 +6,7 @@ It provides the docker image for web interface used on our bridge device.
 Our web interface is a self-provided SvelteKit web application that shows the ZigBee devices, which are retrieved via the SSE server. It enables you to disable unnecessary sensor attributes, in order to further reduce the transmitted data.
 
 ## Environment Variables
+
 - `NODE_ENV`: Nodejs Environement
 - `VITE_REDIS_CONN_STRING`: Connetion string for redis (default: `redis://redis:6379`)
 - `VITE_MQTT_HOST`: IP or hostname of the MQTT host
@@ -23,7 +24,6 @@ npm run build
 You can preview the production build with `npm run preview`.
 
 > To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
-
 
 ## Docker Development
 

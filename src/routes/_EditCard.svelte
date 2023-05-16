@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Card, Table, Button, Toggle, ButtonGroup } from 'flowbite-svelte';
-	import { Check, X } from 'svelte-heros';
+	import { Check, XMark } from 'svelte-heros';
 	export let device: {
 		devName: string;
 		ieeeAddr: string;
@@ -64,7 +64,7 @@
 						cancelFunc(ieeeAddr);
 					}}
 					btnClass="{defaultClasses} text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-red-300 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900"
-					><X size="30" /></Button
+					><XMark size="30" /></Button
 				>
 			</ButtonGroup>
 		</span>

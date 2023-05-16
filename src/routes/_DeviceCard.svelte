@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Card, Table, Button, ButtonGroup, Modal } from 'flowbite-svelte';
-	import { Adjustments, Trash } from 'svelte-heros';
+	import { AdjustmentsHorizontal, Trash } from 'svelte-heros';
 	export let device: {
 		devName: string;
 		ieeeAddr: string;
@@ -57,7 +57,7 @@
 					color="light"
 					textSize="text-xs"
 					on:click={() => {
-						removeModal = true
+						removeModal = true;
 					}}
 					><Trash class="text-blue-700 dark:text-red-700" />
 				</Button>
@@ -69,7 +69,7 @@
 						editFunc(ieeeAddr);
 					}}
 				>
-					<Adjustments class="text-blue-700 dark:text-red-700" />
+					<AdjustmentsHorizontal class="text-blue-700 dark:text-red-700" />
 				</Button>
 			</ButtonGroup>
 		</span>
@@ -77,12 +77,12 @@
 </Card>
 
 <Modal title="Remove Device" bind:open={removeModal} autoclose>
-  <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-   Are you sure you want to remove the device <strong>{devName}</strong>?
-  </p>
+	<p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+		Are you sure you want to remove the device <strong>{devName}</strong>?
+	</p>
 
-  <svelte:fragment slot='footer'>
-    <Button color="red" on:click={() => removeDevice(ieeeAddr)}>Remove</Button>
-    <Button color="alternative">Keep</Button>
-  </svelte:fragment>
+	<svelte:fragment slot="footer">
+		<Button color="red" on:click={() => removeDevice(ieeeAddr)}>Remove</Button>
+		<Button color="alternative">Keep</Button>
+	</svelte:fragment>
 </Modal>
