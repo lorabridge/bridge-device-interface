@@ -27,7 +27,7 @@ COPY --from=build /usr/src/app/build ./
 # RUN echo '{"type": "module"}' > package.json
 COPY package.json package-lock.json ./
 RUN npm i redis async-mqtt
-RUN npm audit fix
+#RUN npm audit fix
 
 USER 1337:1337
 ENV NODE_ENV=production
