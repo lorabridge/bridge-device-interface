@@ -2,7 +2,7 @@
 	export let stats: { [key: string]: any };
 	import { Button, Card, Table } from 'flowbite-svelte';
 	console.log(stats);
-	const Z_INIT = 300;
+	const Z_INIT = 254;
 	let lock = false;
 	let zcount = 0;
 
