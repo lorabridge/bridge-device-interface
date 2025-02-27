@@ -53,7 +53,7 @@
 			{#if stats.temp}
 				<tr class="odd:bg-white even:bg-gray-100 odd:dark:bg-gray-800 even:dark:bg-gray-700">
 					<th scope="col" class="px-6 py-3">Temperature:</th>
-					<td class="pr-6 text-right">{stats.temp.toFixed(2)} %</td>
+					<td class="pr-6 text-right">{stats.temp.toFixed(2)} °C</td>
 				</tr>
 			{/if}
 			<tr class="odd:bg-white even:bg-gray-100 odd:dark:bg-gray-800 even:dark:bg-gray-700">
